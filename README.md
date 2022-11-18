@@ -1,2 +1,2 @@
-# hackathon-backend
+# Hackathon Backend Project
 API Project for Hackathon
