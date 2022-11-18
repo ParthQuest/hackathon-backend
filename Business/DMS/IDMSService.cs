@@ -10,5 +10,6 @@ namespace HackathonAPI.Business
     public interface IDMSService
     {
         Task SaveFile(SaveFileReqVM model);
+        Task<List<FilesResponseVM>> GetData(long? folderId);
     }
 }
