@@ -18,6 +18,7 @@ namespace HackathonAPI.Entity.DMS
     public class GetDataReqVM
     {
         public long? FolderId { get; set; }
+        public string Name { get; set; }
     }
 
     public class FilesResponseVM
@@ -26,5 +27,12 @@ namespace HackathonAPI.Entity.DMS
         public string Name { get; set; }
         public string FileUrl { get; set; }
         public string Path { get; set; }
+        public bool IsFolder { get { return string.IsNullOrEmpty(FileUrl); } }
+    }
+
+    public class FileWithTagsVM : FilesResponseVM
+    {
+        public string Tags { get; set; }
+        //public List<string> TagList { get { return Tags?.Split(",").ToList(); } }
     }
 }

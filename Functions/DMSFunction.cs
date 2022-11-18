@@ -48,7 +48,32 @@ namespace HackathonAPI.Functions
             try
             {
                 var request = await ModelCast.Request<GetDataReqVM>(req.Body);
-                var data = await _dmsService.GetData(request.FolderId);
+                var data = await _dmsService.GetData(request);
+                if (data.Count > 0)
+                {
+                    return OkResponse(data);
+                }
+                else
+                {
+                    return ErrorWithResponse(MessageHelper.NoDataFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.ToString());
+                return ErrorWithResponse(MessageHelper.GetFileFailed);
+            }
+        }
+
+        [FunctionName(nameof(GetFilesOnKeyword))]
+        public async Task<IActionResult> GetFilesOnKeyword(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "POST", Route = "dms/search")] HttpRequest req,
+        ILogger log)
+        {
+            try
+            {
+                var request = await ModelCast.Request<GetDataReqVM>(req.Body);
+                var data = await _dmsService.GetFilesOnKeyword(request.Name);
                 if (data.Count > 0)
                 {
                     return OkResponse(data);

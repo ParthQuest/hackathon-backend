@@ -1,4 +1,5 @@
 ﻿using HackathonAPI.Entity.DMS;
+using Microsoft.VisualBasic.FileIO;
 using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
@@ -55,21 +56,34 @@ namespace HackathonAPI.Business
             return id;
         }
 
-        public async Task<List<FilesResponseVM>> GetData(long? folderId)
+        public async Task<List<FilesResponseVM>> GetData(GetDataReqVM filter)
         {
             var folderData = (await _dbContext.Query("folders")
-                .Where(new { ParentId = folderId })
+                .Where(new { ParentId = filter.FolderId })
+                .WhereLike("FolderName", "%" + filter.Name + "%")
                 .Select("Id", "FolderName as Name")
                 .SelectRaw("GetParentPath(ParentId) as Path")
                 .GetAsync<FilesResponseVM>()).ToList();
 
             var fileData = (await _dbContext.Query("files")
-                .Where(new { FolderId = folderId })
+                .Where(new { FolderId = filter.FolderId })
+                .WhereLike("FileName", "%" + filter.Name + "%")
                 .Select("Id", "FileName as Name", "FileUrl")
                 .SelectRaw("GetParentPath(FolderId) as Path")
                 .GetAsync<FilesResponseVM>()).ToList();
 
             return folderData.Union(fileData).ToList();
+        }
+
+        public async Task<List<FileWithTagsVM>> GetFilesOnKeyword(string keyword)
+        {
+            var fileData = (await _dbContext.Query("files")
+                .WhereLike("Tags", "%" + keyword + "%")
+                .Select("Id", "FileName as Name", "FileUrl", "Tags")
+                .SelectRaw("GetParentPath(FolderId) as Path")
+                .GetAsync<FileWithTagsVM>()).ToList();
+
+            return fileData;
         }
     }
 }
