@@ -12,5 +12,6 @@ namespace HackathonAPI.Business
         Task SaveFile(SaveFileReqVM model);
         Task<List<FilesResponseVM>> GetData(GetDataReqVM filter);
         Task<List<FileWithTagsVM>> GetFilesOnKeyword(string keyword);
+        Task<List<MenuVM>> GetLeftMenuData();
     }
 }

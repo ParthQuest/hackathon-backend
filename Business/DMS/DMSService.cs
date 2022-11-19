@@ -92,5 +92,38 @@ namespace HackathonAPI.Business
 
             return fileData;
         }
+
+        public async Task<List<MenuVM>> GetLeftMenuData()
+        {
+            var folderData = (await _dbContext.Query("folders")
+                    .Select("Id", "FolderName as Name", "ParentId")
+                    .GetAsync<FolderResponseVM>()).ToList();
+
+            var hierarchy = folderData
+                     .Where(c => c.ParentId == null)
+                     .Select(c => new MenuVM
+                     {
+                         Id = c.Id,
+                         Name = c.Name,
+                         ParentId = c.ParentId,
+                         Items= GetChildren(folderData, c.Id)
+                     }).ToList();
+
+            return hierarchy;
+        }
+
+        public List<MenuVM> GetChildren(List<FolderResponseVM> data, long parentId)
+        {
+            return data
+                    .Where(c => c.ParentId == parentId)
+                    .Select(c => new MenuVM
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        ParentId = c.ParentId,
+                        Items = GetChildren(data, c.Id)
+                    })
+                    .ToList();
+        }
     }
 }
