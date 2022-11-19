@@ -58,21 +58,28 @@ namespace HackathonAPI.Business
 
         public async Task<List<FilesResponseVM>> GetData(GetDataReqVM filter)
         {
-            var folderData = (await _dbContext.Query("folders")
-                .Where(new { ParentId = filter.FolderId })
-                .WhereLike("FolderName", "%" + filter.Name + "%")
-                .Select("Id", "FolderName as Name")
-                .SelectRaw("GetParentPath(ParentId) as Path")
-                .GetAsync<FilesResponseVM>()).ToList();
+            try
+            {
+                var folderData = (await _dbContext.Query("folders")
+                    .Where(new { ParentId = filter.FolderId })
+                    .WhereLike("FolderName", "%" + filter.Name + "%")
+                    .Select("Id", "FolderName as Name")
+                    .SelectRaw("GetParentPath(ParentId) as Path")
+                    .GetAsync<FilesResponseVM>()).ToList();
 
-            var fileData = (await _dbContext.Query("files")
-                .Where(new { FolderId = filter.FolderId })
-                .WhereLike("FileName", "%" + filter.Name + "%")
-                .Select("Id", "FileName as Name", "FileUrl")
-                .SelectRaw("GetParentPath(FolderId) as Path")
-                .GetAsync<FilesResponseVM>()).ToList();
+                var fileData = (await _dbContext.Query("files")
+                    .Where(new { FolderId = filter.FolderId })
+                    .WhereLike("FileName", "%" + filter.Name + "%")
+                    .Select("Id", "FileName as Name", "FileUrl")
+                    .SelectRaw("GetParentPath(FolderId) as Path")
+                    .GetAsync<FilesResponseVM>()).ToList();
 
-            return folderData.Union(fileData).ToList();
+                return folderData.Union(fileData).ToList();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public async Task<List<FileWithTagsVM>> GetFilesOnKeyword(string keyword)

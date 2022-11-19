@@ -1,0 +1,10 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  },
+  "ConnectionStrings": {
+    "MySqlConnectionString": "Server=db4free.net,3306;Initial Catalog=hackathon_db;Persist Security Info=False;User ID=hackathon;Password=Admin123!@#;"
+  }
+}
