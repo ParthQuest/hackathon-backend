@@ -35,4 +35,16 @@ namespace HackathonAPI.Entity.DMS
         public string Tags { get; set; }
         //public List<string> TagList { get { return Tags?.Split(",").ToList(); } }
     }
+
+    public class FolderResponseVM
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public long? ParentId { get; set; }
+    }
+
+    public class MenuVM : FolderResponseVM
+    {
+        public List<MenuVM> Items { get; set; } = new List<MenuVM>();
+    }
 }

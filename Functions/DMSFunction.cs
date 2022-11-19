@@ -89,5 +89,29 @@ namespace HackathonAPI.Functions
                 return ErrorWithResponse(MessageHelper.GetFileFailed);
             }
         }
+
+        [FunctionName(nameof(GetLeftMenuData))]
+        public async Task<IActionResult> GetLeftMenuData(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "POST", Route = "dms/getmenu")] HttpRequest req,
+        ILogger log)
+        {
+            try
+            {
+                var data = await _dmsService.GetLeftMenuData();
+                if (data.Count > 0)
+                {
+                    return OkResponse(data);
+                }
+                else
+                {
+                    return ErrorWithResponse(MessageHelper.NoDataFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.ToString());
+                return ErrorWithResponse(MessageHelper.GetFileFailed);
+            }
+        }
     }
 }
