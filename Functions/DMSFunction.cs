@@ -92,7 +92,7 @@ namespace HackathonAPI.Functions
 
         [FunctionName(nameof(GetLeftMenuData))]
         public async Task<IActionResult> GetLeftMenuData(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "POST", Route = "dms/getmenu")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "GET", Route = "dms/getmenu")] HttpRequest req,
         ILogger log)
         {
             try
